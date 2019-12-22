@@ -1,4 +1,4 @@
-Rock Paper Scissors Game Using JavaScript
+[Rock Paper Scissors Game Using JavaScript](https://wilmir.github.io/rock-paper-scissors/)
 
 This is a simple implementaion of classic rock-paper-scissors game using JavaScript functions.
 

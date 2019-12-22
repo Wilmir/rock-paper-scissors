@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Rock Paper Scissors</title>
+    </head>
+    <body>
+
+    </body>
+    <script>
+        function computerPlay(){
+            let n = Math.floor(Math.random() * 3);
+
+           switch (n) {
+                case 0:
+                    return "rock";
+                    break;
+                case 1:
+                    return "paper";
+                    break;
+                default:
+                    return "scissor";
+                    break;    
+           }
+        }
+
+        function playRound(computerSelection, playerSelection){
+            playerSelection = playerSelection.toLowerCase();
+            
+            let winner;
+            
+            //Determine winner
+            if(playerSelection == "rock"){
+                if(computerSelection == "rock"){
+                    winner = "none";
+                }else if(computerSelection == "paper"){
+                    winner = "computer";
+                }else{
+                    winner = "player";
+                }
+            } else if (playerSelection == "paper"){
+                if(computerSelection == "rock"){
+                    winner = "player";
+                }else if(computerSelection == "paper"){
+                    winner = "none";
+                }else{
+                    winner = "computer";
+                }
+            } else if (playerSelection == "scissor"){
+                if(computerSelection == "rock"){
+                    winner = "computer";
+                }else if(computerSelection == "paper"){
+                    winner = "player";
+                }else{
+                    winner = "none";
+                }
+            } else {
+                winner = "invalid";
+            }
+
+            //Return the message
+            if (winner == "none"){
+                console.log("Nobody wins. " + playerSelection + " is equal to " + computerSelection + "."); 
+            }else if (winner == "player"){
+                console.log("You win. " + playerSelection + " beats " + computerSelection + "."); 
+            }else if (winner == "computer"){
+                console.log("You lose. " + computerSelection + " beats " + playerSelection + ".");  
+            } else {
+                console.log("Invalid input. Please input either 'rock', 'paper' or 'scissor'");
+            }
+
+            return winner;
+        }
+
+        (function game(){
+            let playerScore = 0, computerScore = 0;
+            
+            for (let i=0; i<5; i++){
+                let playerSelection = prompt("Input either 'rock', 'paper' or 'scissor'.")
+                let computerSelection = computerPlay();
+                let winner = playRound(computerSelection,playerSelection);
+
+                if(winner == "player"){
+                    playerScore++;
+                }else if (winner == "computer"){
+                    computerScore++;
+                }
+            }
+
+            if(playerScore > computerScore){
+                console.log("You win.");
+            } else if (playerScore < computerScore){
+                console.log("Computer wins.");
+            } else {
+                console.log("Nobody wins.");
+            }
+
+            console.log("Player Score: " + playerScore +". Computer score: " + computerScore);
+
+        })();
+
+
+
+    </script>
+</html>

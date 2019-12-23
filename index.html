@@ -2,10 +2,150 @@
 <html>
     <head>
         <title>Rock Paper Scissors</title>
+        <style>
+        html body{
+            font-family: Arial;
+            font-size:10px;
+            background: #fcf4f4;
+            box-sizing: border-box;
+        }
+        
+        header{
+            width: 100%;
+            text-align: center;
+        }
+
+        #control{
+            width:6rem;
+            padding: 0.5rem;
+            border-radius: .5rem;
+            margin: 0.5rem;
+        }
+        
+        #control:hover, .buttons button:hover{
+            background: gray;
+            color: white;
+        }
+
+        #control:focus, .buttons button:focus{
+            outline: 0;
+        }
+
+        .hands{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0.5rem;
+        }
+
+        .hand{
+            background: white;
+            text-align: center;
+            border: 1px solid #f2f2f2;
+            width: 15rem;
+            margin: .5rem;
+            border-radius: .6rem;
+            transition:all 0.3s;
+        }
+
+
+        .hand:hover{
+            transform: scale(1.05);
+            border: 1px solid transparent;
+        }
+
+
+        .title{
+            padding: 0.5rem;
+            font-size: 1.25rem;
+            background: gray;
+            color: white;
+            border-radius: .6rem .6rem 0 0;
+        }
+
+        .score{
+            padding: 0.5rem;
+            font-size: 1rem;
+            color: gray;
+        }
+
+        #player-hand,#computer-hand{
+            padding: 2rem;
+            text-align: center;
+            font-size: 1.8rem;
+            min-height: 10vh;
+            line-height: 10vh;
+        }        
+
+        .winning-hand{
+            color:#800000;
+        }
+
+
+        #player-score, #computer-score{
+            padding: 1rem;
+            text-align: center;
+            font-size: 1.5rem;
+            min-height: 5vh;
+            line-height: 5vh;
+        }        
+
+        .buttons{
+            display: none;
+            justify-content: center;
+            align-items: center;
+            margin:0.5rem;
+        }
+
+
+        .active-buttons{
+            display:flex;
+        }
+
+        .message{
+            text-align: center;
+            font-size: 1.5rem;
+        }
+        
+        .buttons button{
+            margin:0.5rem;
+            width:4rem;
+            padding: 0.5rem;
+            border-radius: .5rem;
+            margin: 0.5rem;
+        }
+    
+        </style>
     </head>
     <body>
-
+        <header>
+            <h1>Rock, Paper, Scissors</h1>
+            <div class="controller"><button id="control">Start</button></div>
+        </header>
+            <div class = "hands">
+                <div class = "hand">
+                    <div class = "title">Player</div>
+                    <div id="player-hand"></div>
+                    <div class ="score">Score</div>
+                    <div id="player-score"></div>
+                </div>
+                <div class = "hand">
+                    <div class = "title">Computer</div>
+                    <div id="computer-hand"></div>
+                    <div class ="score">Score</div>
+                    <div id="computer-score"></div>
+                </div>
+            </div>
+            <div class = message></div>
+            <div class = "buttons">
+                <button class="option" id="rock">Rock</button>
+                <button class="option" id="paper">Paper</button>
+                <button class="option" id="scissor">Scissor</button>
+            </div>
+        </main>
     </body>
+
+    
     <script>
         function computerPlay(){
             let n = Math.floor(Math.random() * 3);
@@ -23,80 +163,137 @@
            }
         }
 
-        function playRound(computerSelection, playerSelection){
-            playerSelection = playerSelection.toLowerCase();
-            
+
+
+
+            const options = document.querySelectorAll(".option");
+            const playerDisplay = document.getElementById("player-hand");
+            const computerDisplay = document.getElementById("computer-hand");
+            const playerScoreDisplay = document.getElementById("player-score");
+            const computerScoreDisplay = document.getElementById("computer-score");
+            const control = document.getElementById("control");
+            const message = document.querySelector('.message');
+            const buttonContainer = document.querySelector('.buttons');
+            let playerScore, computerScore;    
+            let playerSelection,computerSelection;
             let winner;
-            
-            //Determine winner
-            if(playerSelection == "rock"){
-                if(computerSelection == "rock"){
-                    winner = "none";
-                }else if(computerSelection == "paper"){
-                    winner = "computer";
-                }else{
-                    winner = "player";
-                }
-            } else if (playerSelection == "paper"){
-                if(computerSelection == "rock"){
-                    winner = "player";
-                }else if(computerSelection == "paper"){
-                    winner = "none";
-                }else{
-                    winner = "computer";
-                }
-            } else if (playerSelection == "scissor"){
-                if(computerSelection == "rock"){
-                    winner = "computer";
-                }else if(computerSelection == "paper"){
-                    winner = "player";
-                }else{
-                    winner = "none";
-                }
-            } else {
-                winner = "invalid";
+        
+
+            control.addEventListener('click', initialize);
+
+            function initialize(){
+                playerDisplay.textContent = "";
+                computerDisplay.textContent = "";
+                playerScoreDisplay.textContent = "0";
+                computerScoreDisplay.textContent = "0";
+                control.textContent = "Reset";
+                message.textContent = "Select any of the buttons below."
+                buttonContainer.classList.add("active-buttons")
+                playerScore=0;
+                computerScore=0;
+                game();
+
             }
 
-            //Return the message
-            if (winner == "none"){
-                console.log("Nobody wins. " + playerSelection + " is equal to " + computerSelection + "."); 
-            }else if (winner == "player"){
-                console.log("You win. " + playerSelection + " beats " + computerSelection + "."); 
-            }else if (winner == "computer"){
-                console.log("You lose. " + computerSelection + " beats " + playerSelection + ".");  
-            } else {
-                console.log("Invalid input. Please input either 'rock', 'paper' or 'scissor'");
+
+            function game(){
+                options.forEach(option => {
+                    option.addEventListener('click', addSelection);
+                });
             }
 
-            return winner;
-        }
 
-        (function game(){
-            let playerScore = 0, computerScore = 0;
-            
-            for (let i=0; i<5; i++){
-                let playerSelection = prompt("Input either 'rock', 'paper' or 'scissor'.")
-                let computerSelection = computerPlay();
-                let winner = playRound(computerSelection,playerSelection);
+            function addSelection(){
+                    playerSelection = this.getAttribute('id');
+                    computerSelection = computerPlay();
 
-                if(winner == "player"){
+                    displaySelection();
+                    determineWinner();
+                    addScore();
+                    displayScore();
+                    checkScore();
+            }
+
+
+            function displaySelection(){
+                playerDisplay.textContent = playerSelection;
+                computerDisplay.textContent = computerSelection;
+            }
+
+
+            function determineWinner(){
+                    if (playerSelection == "rock"){
+                        if(computerSelection=="paper"){
+                            winner = "computer";
+                        } else if (computerSelection=="scissor")     {
+                            winner = "player";
+                        }else{
+                            winner = "nobody";
+                        }                 
+                    }else if (playerSelection=="paper"){
+                        if(computerSelection=="rock"){
+                            winner = "player";
+                        }else if(computerSelection=="scissor"){
+                            winner = "computer";
+                        }else{
+                            winner="nobody";
+                        }
+                    }else if (playerSelection=="scissor"){
+                        if(computerSelection=="rock"){
+                            winner = "computer";
+                        }else if(computerSelection=="paper"){
+                            winner="player";
+                        }else{
+                            winner="nobody";
+                        }
+                    }
+                    return winner;
+            }
+
+            function addScore(){
+                if(winner=="player"){
                     playerScore++;
-                }else if (winner == "computer"){
+                    message.textContent = "You win. " + playerSelection.charAt(0).toUpperCase() + playerSelection.slice(1) + " beats " + computerSelection.charAt(0).toUpperCase() + computerSelection.slice(1) + "."
+                    playerDisplay.classList.add("winning-hand");  
+                    computerDisplay.classList.remove("winning-hand");  
+                }else if(winner=="computer"){
                     computerScore++;
+                    message.textContent = "Computer wins. " + computerSelection.charAt(0).toUpperCase() + computerSelection.slice(1)  + " beats " + playerSelection.charAt(0).toUpperCase() + playerSelection.slice(1) + "."
+                    computerDisplay.classList.add("winning-hand");  
+                    playerDisplay.classList.remove("winning-hand");  
+
+                }else{
+                    message.textContent = "Nobody wins."
+                    computerDisplay.classList.remove("winning-hand");  
+                    playerDisplay.classList.remove("winning-hand");  
+
                 }
             }
 
-            if(playerScore > computerScore){
-                console.log("You win.");
-            } else if (playerScore < computerScore){
-                console.log("Computer wins.");
-            } else {
-                console.log("Nobody wins.");
+
+            function displayScore(){
+                playerScoreDisplay.textContent = playerScore;
+                computerScoreDisplay.textContent = computerScore;
             }
 
-            console.log("Player Score: " + playerScore +". Computer score: " + computerScore);
 
-        })();
+            function checkScore(){
+                if(playerScore===5||computerScore===5){
+                    options.forEach(option => {
+                        option.removeEventListener('click', displaySelection);
+                    });
+
+                    buttonContainer.classList.remove("active-buttons")
+
+                    control.textContent = "Start again"
+                    
+                    if(playerScore===5){
+                        message.textContent = "You are the champion!"
+                    }else{
+                        message.textContent = "You lose!"
+                    }
+                }
+            }
 
 
 
